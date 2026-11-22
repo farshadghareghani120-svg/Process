@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سامانه جامع راه‌اندازی و بهره‌برداری واحدهای صنعتی</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Vazirmatn Font -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.04), 0 8px 10px -6px rgba(15, 23, 42, 0.02);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(241, 245, 249, 0.6);
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(20, 184, 166, 0.35);
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(20, 184, 166, 0.65);
+        }
+        @keyframes pulse-border {
+            0%, 100% { border-color: rgba(20, 184, 166, 0.4); }
+            50% { border-color: rgba(249, 115, 22, 0.8); }
+        }
+        .analyzing-border {
+            animation: pulse-border 1.5s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-teal-500 selection:text-white bg-gradient-to-br from-slate-50 via-teal-50/30 to-orange-50/20">
+
+    <!-- Top Global Navigation Header -->
+    <header class="glass-panel sticky top-0 z-40 border-b border-slate-200/80 px-4 sm:px-6 py-3.5 shadow-sm">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
+            <!-- Brand & Breadcrumb -->
+            <div class="flex items-center gap-3">
+                <button onclick="switchToHub()" class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-teal-500 via-emerald-500 to-orange-500 flex items-center justify-center shadow-lg shadow-teal-500/20 text-white text-xl hover:scale-105 transition-transform cursor-pointer" title="بازگشت به صفحه اصلی واحدها">
+                    <i class="fa-solid fa-industry"></i>
+                </button>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-lg sm:text-xl font-black tracking-tight text-slate-900">پرتال جامع راه‌اندازی واحدهای صنعتی</h1>
+                        <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-700 rounded-full border border-emerald-200 hidden sm:inline-block">Commissioning Portal</span>
+                    </div>
+                    <div id="breadcrumbNav" class="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5 font-medium">
+                        <span class="text-teal-600 font-bold"><i class="fa-solid fa-layer-group ml-1"></i>لیست واحدهای صنعتی</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Header Global Actions -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <button id="backToHubBtn" onclick="switchToHub()" class="hidden px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-bold transition flex items-center gap-2 border border-slate-200">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>همه واحدها</span>
+                </button>
+                <button onclick="openAddUnitModal()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white text-xs sm:text-sm font-bold shadow-md shadow-teal-600/20 transition flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>افزودن واحد جدید</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 1: UNITS PORTFOLIO HUB (صفحه تعاملی اولیه - لیست واحدها)         -->
+    <!-- ===================================================================== -->
+    <main id="unitsHubView" class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 flex flex-col gap-6">
+        
+        <!-- Hero Banner & Stats -->
+        <div class="glass-panel rounded-3xl p-6 sm:p-8 border-r-4 border-orange-500 relative overflow-hidden">
+            <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-gradient-to-tr from-teal-500/10 to-orange-500/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
+                <div class="max-w-2xl">
+                    <span class="px-3 py-1 bg-orange-50 text-orange-600 text-xs font-bold rounded-full border border-orange-200 inline-block mb-3">
+                        <i class="fa-solid fa-microchip ml-1"></i> سیستم هوشمند مدیریت مدارک و راه‌اندازی (P&ID / PFD / BFD)
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mb-2">مدیریت یکپارچه واحدهای فرآیندی و یوتیلیتی</h2>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        واحد مورد نظر خود را برای بررسی تجهیزات، دستورالعمل‌های راه‌اندازی و دریافت خروجی انتخاب کنید. همچنین می‌توانید نام واحدها را ویرایش کرده و با بارگذاری نامحدود مدارک مهندسی، واحدهای جدید را به سامانه اضافه نمایید.
+                    </p>
+                </div>
+                
+                <!-- Quick Portfolio Metrics -->
+                <div class="grid grid-cols-3 gap-3 w-full md:w-auto shrink-0">
+                    <div class="bg-white/90 p-3.5 rounded-2xl border border-slate-200/80 text-center shadow-xs">
+                        <span class="text-xs text-slate-400 block mb-1 font-bold">کل واحدها</span>
+                        <span id="hubTotalUnits" class="text-2xl font-black text-teal-600">۰</span>
+                    </div>
+                    <div class="bg-white/90 p-3.5 rounded-2xl border border-slate-200/80 text-center shadow-xs">
+                        <span class="text-xs text-slate-400 block mb-1 font-bold">کل تجهیزات</span>
+                        <span id="hubTotalEquips" class="text-2xl font-black text-emerald-600">۰</span>
+                    </div>
+                    <div class="bg-white/90 p-3.5 rounded-2xl border border-slate-200/80 text-center shadow-xs">
+                        <span class="text-xs text-slate-400 block mb-1 font-bold">مدارک ثبت‌شده</span>
+                        <span id="hubTotalDocs" class="text-2xl font-black text-orange-500">۰</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter & Search Bar for Units -->
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <h3 class="text-base font-extrabold text-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-grid-2 text-teal-600"></i>
+                <span>واحدهای تعریف‌شده در سامانه</span>
+            </h3>
+            <div class="relative w-full sm:w-80">
+                <span class="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-search"></i>
+                </span>
+                <input type="text" id="unitSearchInput" oninput="renderUnitsGrid()" placeholder="جستجوی نام یا کد واحد..." class="w-full pl-4 pr-10 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition text-slate-800 shadow-xs">
+            </div>
+        </div>
+
+        <!-- Units Cards Grid -->
+        <div id="unitsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Populated dynamically by JS -->
+        </div>
+
+    </main>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 2: UNIT EQUIPMENT DASHBOARD (داشبورد تخصصی هر واحد)              -->
+    <!-- ===================================================================== -->
+    <main id="unitDashboardView" class="hidden flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 flex flex-col gap-6">
+        
+        <!-- Unit Banner Header with Inline Edit, Add Docs & Export Buttons -->
+        <div class="glass-panel rounded-2xl p-5 border-r-4 border-teal-500 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <div class="flex items-start sm:items-center gap-4">
+                <div id="dashUnitIcon" class="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 text-white flex items-center justify-center text-2xl shadow-md shrink-0">
+                    <i class="fa-solid fa-water"></i>
+                </div>
+                <div>
+                    <div class="flex flex-wrap items-center gap-2 mb-1">
+                        <span id="dashUnitCode" class="px-2.5 py-0.5 bg-teal-50 text-teal-700 text-xs font-black rounded-lg border border-teal-200">WWT-P2</span>
+                        <span id="dashUnitPhase" class="px-2.5 py-0.5 bg-orange-50 text-orange-700 text-xs font-bold rounded-lg border border-orange-200">فاز ۲</span>
+                        <button onclick="openEditUnitModal(currentUnitId)" class="text-xs text-slate-400 hover:text-orange-600 transition flex items-center gap-1 bg-slate-100 hover:bg-orange-50 px-2 py-0.5 rounded-md" title="ویرایش نام و مشخصات واحد">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <span>ویرایش نام</span>
+                        </button>
+                    </div>
+                    <h2 id="dashUnitName" class="text-xl sm:text-2xl font-black text-slate-900">نام واحد صنعتی</h2>
+                    <p id="dashUnitDesc" class="text-xs text-slate-500 mt-1 line-clamp-1">توضیحات واحد</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons for this Unit -->
+            <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto justify-end">
+                <button onclick="openUnitDocsModal(currentUnitId)" class="px-3.5 py-2 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 text-xs font-bold transition flex items-center gap-2">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <span>مدارک مهندسی (<span id="dashDocsCount">۰</span>)</span>
+                </button>
+                <button onclick="exportUnitEquipmentCSV()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm text-xs font-bold transition flex items-center gap-2">
+                    <i class="fa-solid fa-file-excel"></i>
+                    <span>خروجی لیست تجهیزات (CSV)</span>
+                </button>
+                <button onclick="openAddEquipmentModal()" class="px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white shadow-sm text-xs font-bold transition flex items-center gap-2">
+                    <i class="fa-solid fa-plus-circle"></i>
+                    <span>افزودن تجهیز</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Split Workspace: Left (Categories & List) | Right (Details) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow">
+            
+            <!-- Left Column: Categories and Equipment List (5 cols) -->
+            <section class="lg:col-span-5 flex flex-col gap-4">
+                <div class="glass-panel rounded-2xl p-4 shadow-sm flex flex-col gap-4 h-full">
+                    
+                    <!-- Search inside Unit -->
+                    <div class="relative">
+                        <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-search"></i>
+                        </span>
+                        <input type="text" id="searchInput" oninput="filterEquipment()" placeholder="جستجوی تگ، نام تجهیز یا وظیفه..." class="w-full pl-4 pr-9 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition text-slate-800">
+                    </div>
+
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 px-1">دسته‌بندی فرآیندها و دیسیپلین‌ها</h3>
+                        <!-- Categories Tabs -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="categoryTabs">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <div class="flex-grow flex flex-col">
+                        <div class="flex justify-between items-center mb-2 px-1">
+                            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">لیست تجهیزات دسته</h3>
+                            <span id="categoryEquipCount" class="text-[11px] font-bold text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full">۰ تجهیز</span>
+                        </div>
+                        <!-- Equipment List Container -->
+                        <div id="equipmentList" class="flex flex-col gap-2 max-h-[480px] overflow-y-auto custom-scrollbar pr-1">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Column: Equipment Details (7 cols) -->
+            <section class="lg:col-span-7 flex flex-col">
+                <div id="detailView" class="glass-panel rounded-2xl p-6 sm:p-8 shadow-sm h-full flex flex-col justify-between border-t-4 border-orange-500 min-h-[520px]">
+                    
+                    <!-- Initial State / Default when no selection -->
+                    <div id="emptyState" class="m-auto text-center py-12">
+                        <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-tr from-teal-50 to-orange-50 flex items-center justify-center text-teal-600 text-3xl shadow-inner border border-teal-100">
+                            <i class="fa-solid fa-arrow-pointer animate-bounce"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-800 mb-1">یک تجهیز را انتخاب کنید</h3>
+                        <p class="text-sm text-slate-500 max-w-sm mx-auto">ابتدا یک دسته را باز کنید، سپس روی تجهیز کلیک کنید تا وظیفه، ارتباط با قبل و بعد، مشخصات فنی و شرایط راه‌اندازی را ببینید.</p>
+                    </div>
+
+                    <!-- Active Detail Content (Hidden by default) -->
+                    <div id="activeState" class="hidden flex flex-col gap-5">
+                        <!-- Header of Detail -->
+                        <div class="flex items-start justify-between border-b border-slate-200 pb-4 gap-3">
+                            <div>
+                                <div class="flex flex-wrap items-center gap-2 mb-2">
+                                    <span id="detailCategory" class="px-3 py-1 bg-teal-50 text-teal-700 text-xs font-bold rounded-full border border-teal-200"></span>
+                                    <span id="detailTag" class="px-2.5 py-1 bg-orange-50 text-orange-700 text-xs font-black rounded-lg border border-orange-200 font-mono">TAG</span>
+                                </div>
+                                <h2 id="detailTitle" class="text-xl sm:text-2xl font-black text-slate-900">نام تجهیز</h2>
+                            </div>
+                            <div class="flex items-center gap-2 shrink-0">
+                                <button onclick="deleteCurrentEquipment()" class="w-10 h-10 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 flex items-center justify-center transition border border-red-200" title="حذف تجهیز">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                                <div id="detailIcon" class="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-50 to-emerald-50 flex items-center justify-center text-teal-600 text-xl border border-teal-200 shadow-xs">
+                                    <i class="fa-solid fa-gear"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Grid Info Cards -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Task / Duty -->
+                            <div class="bg-slate-50/90 p-4 rounded-xl border border-slate-200/80 shadow-xs">
+                                <div class="flex items-center gap-2 text-teal-700 font-bold mb-2 text-sm">
+                                    <i class="fa-solid fa-bullseye text-teal-500"></i>
+                                    <h3>وظیفه اصلی</h3>
+                                </div>
+                                <p id="detailDuty" class="text-sm text-slate-600 leading-relaxed"></p>
+                            </div>
+
+                            <!-- Specifications -->
+                            <div class="bg-slate-50/90 p-4 rounded-xl border border-slate-200/80 shadow-xs">
+                                <div class="flex items-center gap-2 text-emerald-700 font-bold mb-2 text-sm">
+                                    <i class="fa-solid fa-sliders text-emerald-500"></i>
+                                    <h3>مشخصات فنی</h3>
+                                </div>
+                                <p id="detailSpecs" class="text-sm text-slate-600 leading-relaxed"></p>
+                            </div>
+                        </div>
+
+                        <!-- Flow Connection (Before & After) -->
+                        <div class="bg-slate-50/90 p-4 rounded-xl border border-slate-200/80 shadow-xs">
+                            <div class="flex items-center gap-2 text-orange-700 font-bold mb-3 text-sm">
+                                <i class="fa-solid fa-network-wired text-orange-500"></i>
+                                <h3>ارتباط در فرآیند (Upstream & Downstream)</h3>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                                <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-2xs">
+                                    <span class="text-xs text-slate-400 block mb-1 font-bold"><i class="fa-solid fa-arrow-right text-emerald-600 ml-1"></i> ارتباط با قبل (ورودی):</span>
+                                    <span id="detailBefore" class="text-slate-700 font-medium"></span>
+                                </div>
+                                <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-2xs">
+                                    <span class="text-xs text-slate-400 block mb-1 font-bold"><i class="fa-solid fa-arrow-left text-teal-600 ml-1"></i> ارتباط با بعد (خروجی):</span>
+                                    <span id="detailAfter" class="text-slate-700 font-medium"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Commissioning / Startup Conditions -->
+                        <div class="bg-gradient-to-r from-orange-50/90 to-amber-50/90 p-4 rounded-xl border border-orange-200 shadow-xs">
+                            <div class="flex items-center gap-2 text-orange-800 font-bold mb-2 text-sm">
+                                <i class="fa-solid fa-clipboard-check text-orange-600"></i>
+                                <h3>شرایط راه‌اندازی، پیش‌راه‌اندازی و ایمنی</h3>
+                            </div>
+                            <p id="detailStartup" class="text-sm text-orange-950/90 leading-relaxed"></p>
+                        </div>
+                    </div>
+
+                    <!-- Footer note inside card -->
+                    <div class="mt-6 pt-4 border-t border-slate-200 flex flex-wrap justify-between items-center gap-2 text-xs text-slate-400 font-medium">
+                        <span>پایگاه داده مهندسی و راه‌اندازی واحدهای صنعتی (ذخیره‌سازی خودکار)</span>
+                        <span id="equipCountBadge" class="text-teal-600 font-bold bg-teal-50 px-3 py-1 rounded-full border border-teal-100">تعداد کل تجهیزات واحد: ۰</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL 1: ADD NEW UNIT & UNLIMITED ENGINEERING DOCS ANALYZER           -->
+    <!-- ===================================================================== -->
+    <div id="addUnitModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 my-8">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-5">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-lg border border-teal-200">
+                        <i class="fa-solid fa-folder-plus"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-black text-slate-900">تعریف واحد جدید و بارگذاری مدارک</h3>
+                        <p class="text-xs text-slate-500">مدارک مهندسی را بارگذاری کنید تا سیستم به‌صورت خودکار تجهیزات را استخراج کند</p>
+                    </div>
+                </div>
+                <button onclick="closeAddUnitModal()" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">نام واحد صنعتی *</label>
+                        <input type="text" id="newUnitName" placeholder="مثلاً: واحد تصفیه آب صنعتی (WTP) یا واحد بخار" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">کد واحد (Unit Code)</label>
+                        <input type="text" id="newUnitCode" placeholder="مثلاً: WTP-101" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 font-mono text-left" dir="ltr">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">فاز / بخش پروژه</label>
+                        <input type="text" id="newUnitPhase" value="فاز ۲ - یوتیلیتی و آفسایت" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">توضیحات مختصر</label>
+                        <input type="text" id="newUnitDesc" placeholder="شرح کلی عملکرد واحد..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500">
+                    </div>
+                </div>
+
+                <!-- Unlimited Engineering Documents Upload Zone -->
+                <div class="border-2 border-dashed border-teal-300 bg-teal-50/40 rounded-2xl p-5 text-center transition hover:bg-teal-50/70">
+                    <input type="file" id="newUnitFiles" multiple accept=".pdf,.png,.jpg,.jpeg,.txt,.csv,.md" class="hidden" onchange="handleNewUnitFilesSelect(event)">
+                    <div class="w-12 h-12 mx-auto mb-2 rounded-full bg-white text-teal-600 flex items-center justify-center text-xl shadow-xs border border-teal-100">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <h4 class="text-sm font-bold text-slate-800 mb-1">بارگذاری نامحدود مدارک مهندسی (P&ID, PFD, BFD, Plot Plan, Process Description)</h4>
+                    <p class="text-xs text-slate-500 mb-3">فرمت‌های مجاز: PDF، تصاویر نقشه‌ها (PNG/JPG) و فایل‌های متنی</p>
+                    <button type="button" onclick="document.getElementById('newUnitFiles').click()" class="px-4 py-2 bg-white hover:bg-slate-50 text-teal-700 border border-teal-300 rounded-xl text-xs font-bold shadow-2xs transition">
+                        <i class="fa-solid fa-file-circle-plus ml-1"></i> انتخاب فایل‌ها از سیستم
+                    </button>
+                </div>
+
+                <!-- Selected Files Preview List -->
+                <div id="newUnitFilesList" class="max-h-36 overflow-y-auto custom-scrollbar space-y-1.5"></div>
+
+                <!-- Optional Direct Technical Text / Notes -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">یا درج مستقیم متن شرح فرآیند / لیست تگ‌ها (اختیاری)</label>
+                    <textarea id="newUnitRawText" rows="3" placeholder="می‌توانید متن Process Description یا لیست تگ‌های تجهیزات (مانند P-101, TK-102, PT-105...) را اینجا وارد کنید تا هوش مصنوعی آن‌ها را تحلیل کند..." class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-teal-500"></textarea>
+                </div>
+
+                <!-- Analysis Progress Indicator -->
+                <div id="analysisProgressBox" class="hidden bg-orange-50 border border-orange-200 rounded-2xl p-4 analyzing-border">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-spinner fa-spin text-orange-600 text-xl"></i>
+                        <div>
+                            <h4 id="analysisStatusTitle" class="text-sm font-bold text-orange-900">در حال آنالیز هوشمند مدارک مهندسی...</h4>
+                            <p id="analysisStatusSub" class="text-xs text-orange-700 mt-0.5">استخراج تجهیزات فرآیندی، ابزار دقیق و دستورالعمل‌های راه‌اندازی</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end items-center gap-3 mt-6 pt-4 border-t border-slate-100">
+                <button onclick="closeAddUnitModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">انصراف</button>
+                <button id="submitNewUnitBtn" onclick="createAndAnalyzeUnit()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white text-xs font-bold shadow-md shadow-teal-600/20 transition flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>ثبت واحد و شروع آنالیز هوشمند</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL 2: EDIT UNIT NAME & DETAILS (ویرایش نام و مشخصات واحد)          -->
+    <!-- ===================================================================== -->
+    <div id="editUnitModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+                <h3 class="text-base font-black text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-orange-500"></i>
+                    <span>ویرایش مشخصات واحد</span>
+                </h3>
+                <button onclick="closeEditUnitModal()" class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <input type="hidden" id="editUnitId">
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">نام واحد *</label>
+                    <input type="text" id="editUnitNameInput" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">کد واحد</label>
+                    <input type="text" id="editUnitCodeInput" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 font-mono text-left" dir="ltr">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">فاز / موقعیت</label>
+                    <input type="text" id="editUnitPhaseInput" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">توضیحات</label>
+                    <textarea id="editUnitDescInput" rows="2" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-teal-500"></textarea>
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 mt-5 pt-3 border-t border-slate-100">
+                <button onclick="closeEditUnitModal()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold">انصراف</button>
+                <button onclick="saveUnitEdits()" class="px-5 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold shadow-sm">ذخیره تغییرات</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL 3: ENGINEERING DOCUMENTS MANAGER & VIEWER (مدارک مهندسی واحد)  -->
+    <!-- ===================================================================== -->
+    <div id="unitDocsModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-4xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 my-8">
+            <div class="flex flex-wrap justify-between items-center border-b border-slate-100 pb-4 mb-5 gap-3">
+                <div>
+                    <h3 class="text-lg font-black text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-folder-open text-orange-500"></i>
+                        <span>آرشیو مدارک مهندسی واحد: <span id="docsModalUnitTitle" class="text-teal-600"></span></span>
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-0.5">مدارک بارگذاری‌شده را مشاهده کنید یا مدارک جدیدی برای آنالیز به این واحد بیفزایید</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <input type="file" id="appendDocsInput" multiple accept=".pdf,.png,.jpg,.jpeg,.txt,.csv,.md" class="hidden" onchange="appendDocsToCurrentUnit(event)">
+                    <button onclick="document.getElementById('appendDocsInput').click()" class="px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>افزودن مدرک جدید</span>
+                    </button>
+                    <button onclick="closeUnitDocsModal()" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="appendProgressBanner" class="hidden mb-4 bg-orange-50 border border-orange-200 rounded-xl p-3 flex items-center gap-3 text-xs text-orange-800 font-bold">
+                <i class="fa-solid fa-spinner fa-spin text-orange-600 text-base"></i>
+                <span>در حال پردازش مدارک جدید و افزودن تجهیزات استخراج‌شده به لیست واحد...</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-5">
+                <!-- Documents List (5 cols) -->
+                <div class="md:col-span-5 flex flex-col gap-2 max-h-[420px] overflow-y-auto custom-scrollbar pr-1" id="unitDocsListContainer">
+                    <!-- Populated by JS -->
+                </div>
+
+                <!-- Document Preview Pane (7 cols) -->
+                <div class="md:col-span-7 bg-slate-50 rounded-2xl border border-slate-200 p-4 flex flex-col items-center justify-center min-h-[350px] max-h-[420px] overflow-auto" id="docPreviewPane">
+                    <div class="text-center text-slate-400">
+                        <i class="fa-solid fa-file-lines text-4xl mb-2 text-slate-300"></i>
+                        <p class="text-xs">یک مدرک را از لیست سمت راست برای پیش‌نمایش انتخاب کنید</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL 4: ADD MANUAL EQUIPMENT TO CURRENT UNIT (افزودن دستی تجهیز)     -->
+    <!-- ===================================================================== -->
+    <div id="addEquipModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+                <h3 class="text-base font-black text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-plus-circle text-teal-600"></i>
+                    <span>افزودن تجهیز جدید به واحد</span>
+                </h3>
+                <button onclick="closeAddEquipmentModal()" class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="space-y-3 text-sm">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">تگ تجهیز (Tag) *</label>
+                        <input type="text" id="eqTagInput" placeholder="مثلاً: B-P-2205A" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-left" dir="ltr">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">دسته‌بندی فرآیندی *</label>
+                        <input type="text" id="eqCatInput" list="existingCatsList" placeholder="انتخاب یا تایپ دسته جدید" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                        <datalist id="existingCatsList"></datalist>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">نام کامل تجهیز *</label>
+                    <input type="text" id="eqNameInput" placeholder="مثلاً: پمپ سیرکولاسیون داخلی هوازی" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">وظیفه اصلی</label>
+                    <textarea id="eqDutyInput" rows="2" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">ارتباط با قبل (ورودی)</label>
+                        <input type="text" id="eqBeforeInput" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">ارتباط با بعد (خروجی)</label>
+                        <input type="text" id="eqAfterInput" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">مشخصات فنی</label>
+                    <input type="text" id="eqSpecsInput" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">شرایط راه‌اندازی و ایمنی</label>
+                    <textarea id="eqStartupInput" rows="2" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs"></textarea>
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 mt-5 pt-3 border-t border-slate-100">
+                <button onclick="closeAddEquipmentModal()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold">انصراف</button>
+                <button onclick="saveNewManualEquipment()" class="px-5 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold">ذخیره تجهیز</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Toast Notification Box (No alert() used) -->
+    <div id="toastBox" class="fixed bottom-5 left-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 text-xs font-bold border border-slate-700">
+            <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+            <span id="toastMessage">عملیات با موفقیت انجام شد</span>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 text-xs text-slate-500 border-t border-slate-200/80 mt-8 bg-white/60">
+        <p>سامانه جامع بهره‌برداری و راه‌اندازی واحدهای صنعتی &copy; ۱۴۰۵</p>
+    </footer>
+
+    <!-- ===================================================================== -->
+    <!-- JAVASCRIPT: INDEXEDDB PERSISTENCE, GEMINI AI ANALYZER & UI ENGINE     -->
+    <!-- ===================================================================== -->
+    <script>
+        // ---------------------------------------------------------------------
+        // 1. DEFAULT SEED DATA FOR PHASE 2 WWTP (WWT-P2)
+        // ---------------------------------------------------------------------
+        const DEFAULT_WWT_UNIT = {
+            id: "unit-wwt-p2",
+            name: "تصفیه‌خانه پساب صنعتی فاز ۲",
+            code: "WWT-P2",
+            phase: "فاز ۲ - تصفیه پساب COC و بهداشتی",
+            icon: "fa-water",
+            description: "واحد تصفیه پساب‌های آلوده به روغن (COC) و بهداشتی شامل پیش‌تصفیه DAF، فرآیند بیولوژیکی A2O، زلال‌سازی، گندزدایی و آبگیری لجن.",
+            documents: [
+                {
+                    id: "doc-seed-1",
+                    name: "DMPC-WWTP2-ED-WWT-PR-PFD-0724.pdf",
+                    type: "application/pdf",
+                    docCategory: "PFD & Mass Balance",
+                    uploadDate: "۱۴۰۴/۱۲/۱۰",
+                    summary: "نمودار جریان فرآیند (PFD) و بالانس جرمی فاز ۲ با ظرفیت نرمال ۱۵۰ مترمکعب بر ساعت."
+                },
+                {
+                    id: "doc-seed-2",
+                    name: "DMPC-WWTP2-ED-WWT-PR-PID-0703.pdf",
+                    type: "application/pdf",
+                    docCategory: "P&ID (10 Sheets)",
+                    uploadDate: "۱۴۰۴/۱۲/۱۲",
+                    summary: "نقشه‌های لوله‌کشی و ابزار دقیق تصفیه‌خانه فاز ۲ شامل تگ‌های تجهیزات، خطوط و شیرآلات."
+                },
+                {
+                    id: "doc-seed-3",
+                    name: "DMPC-WWTP2-EB-WWT-PI-DWG-2021.pdf",
+                    type: "application/pdf",
+                    docCategory: "General Plot Plan",
+                    uploadDate: "۱۴۰۴/۱۲/۱۵",
+                    summary: "جانمایی کلی تجهیزات و ساختمان‌های واحد تصفیه‌خانه پساب فاز ۲."
+                }
+            ],
+            categories: [
+                {
+                    id: "pretreatment",
+                    name: "پیش‌تصفیه و DAF",
+                    icon: "fa-filter",
+                    items: [
+                        {
+                            tag: "I-TK-0001A",
+                            name: "مخزن اضطراری و حذف ترکیبات فرار (VOC Removal Tank)",
+                            duty: "دریافت فاضلاب‌های با بار شوک بالا و حذف ترکیبات آلی فرار (VOC) از طریق هوادهی پنوماتیک.",
+                            before: "خط لوله ورودی فاضلاب خام از Battery Limit",
+                            after: "حوضچه همسان‌سازی (Surge Tank I-TK-0001B)",
+                            specs: "جنس بتنی، سیستم دیفیوزر هوا (I-DF-0001) و اسکیمر روغن سطحی (I-OS-0001).",
+                            startup: "کنترل آب‌بندی مخزن، تست دمنده‌های هوای حذف VOC، بررسی عملکرد اسکیمر سطحی و مسیر سرریز به حوضچه سرج."
+                        },
+                        {
+                            tag: "I-TK-0001B",
+                            name: "حوضچه همسان‌سازی (Surge / Equalization Tank)",
+                            duty: "یکسان‌سازی دبی و غلظت آلاینده‌های فاضلاب ورودی پیش از ورود به واحدهای فرآیندی.",
+                            before: "خروجی مخزن اضطراری و خطوط جمع‌آوری Interconnecting",
+                            after: "پمپ‌های انتقال سرج (I-P-0002 A~F)",
+                            specs: "مخزن بتنی چهاربخشی مجهز به ۸ عدد میکسر مستغرق (I-MX-0001 A~H) جهت جلوگیری از ته‌نشینی.",
+                            startup: "اطمینان از حداقل سطح مایع (LL=600mm) پیش از روشن کردن میکسرهای مستغرق، تست سنسورهای سطح LSL/LSH."
+                        },
+                        {
+                            tag: "B-TK-2203 A/B",
+                            name: "مخازن انعقاد سریع (Coagulation Tanks)",
+                            duty: "اختلاط سریع منعقدکننده (کلرور فریک) و تنظیم pH جهت شکستن امولسیون‌های روغنی.",
+                            before: "خط فاضلاب همسان‌شده از ایستگاه پمپاژ سرج",
+                            after: "مخازن لخته‌سازی (B-TK-2204 A/B)",
+                            specs: "۲ دستگاه ۵۰٪ بتنی به حجم ۴.۹ مترمکعب مجهز به میکسرهای دور تند (B-MX-2202 A/B - ۴۵۰ دور بر دقیقه).",
+                            startup: "کالیبراسیون آنلاین آنالایزر pH ورودی، تست پمپ‌های تزریق اسید و سود و کنترل جهت چرخش میکسر."
+                        },
+                        {
+                            tag: "B-TK-2204 A/B",
+                            name: "مخازن لخته‌سازی (Flocculation Tanks)",
+                            duty: "اختلاط آرام جهت تشکیل لخته‌های درشت (Flocs) با تزریق پلی‌الکترولیت.",
+                            before: "خروجی مخازن انعقاد (B-TK-2203 A/B)",
+                            after: "واحد شناورسازی با هوای محلول (B-TK-2205 A/B)",
+                            specs: "۲ دستگاه ۵۰٪ بتنی به حجم ۳۰.۰۳ مترمکعب مجهز به میکسرهای دور آرام (B-MX-2203 A/B - ۵۰ دور بر دقیقه).",
+                            startup: "بررسی گرادیان سرعت میکسر (VFD)، اطمینان از دوزینگ صحیح کمک منعقدکننده و عدم شکستن لخته‌ها."
+                        },
+                        {
+                            tag: "B-TK-2205 A/B",
+                            name: "پکیج شناورسازی با هوای محلول (DAF Unit)",
+                            duty: "جداسازی روغن‌های امولسیونه و مواد معلق توسط میکروحباب‌های هوای اشباع.",
+                            before: "خروجی مخازن لخته‌سازی و مخازن اشباع هوا (B-VE-2201 A/B)",
+                            after: "واحد بیولوژیکی (تانک بی‌هوازی) و مخزن لجن روغنی (B-TK-2226)",
+                            specs: "۲ دستگاه ۵۰٪ ظرفیت هر کدام ۷۵ مترمکعب بر ساعت، مجهز به اسکیمر روغنی (B-OS-2202 A/B) و ۳ پمپ برگشت (B-P-2204 A/C).",
+                            startup: "تنظیم فشار مخازن اشباع هوا (B-VE-2201) روی ۴ تا ۵ بار، تست عملکرد شیرهای فشارشکن، بررسی حرکت پارویی اسکیمر روغن."
+                        }
+                    ]
+                },
+                {
+                    id: "biological",
+                    name: "فرآیند بیولوژیکی (A2O)",
+                    icon: "fa-dna",
+                    items: [
+                        {
+                            tag: "B-TK-2206 A/B",
+                            name: "مخازن بی‌هوازی (Anaerobic Tanks)",
+                            duty: "حذف بیولوژیکی فسفر و آماده‌سازی فاضلاب روغن‌زدایی‌شده با دریافت لجن برگشتی (RAS).",
+                            before: "پساب خروجی DAF و لجن برگشتی از زلال‌ساز",
+                            after: "مخازن آنوکسیک (B-TK-2207 A/B)",
+                            specs: "۲ مخزن بتنی به حجم ۸۶.۲۵ مترمکعب مجهز به میکسرهای مستغرق (B-MX-2204 A/B).",
+                            startup: "بررسی عدم ورود اکسیژن محلول به ناحیه بی‌هوازی، تست میکسرهای مستغرق و کنترل تزریق منبع کربن (استات سدیم)."
+                        },
+                        {
+                            tag: "B-TK-2207 A/B",
+                            name: "مخازن آنوکسیک / بدون اکسیژن (Anoxic Tanks)",
+                            duty: "انجام فرآیند نیترات‌زدایی (Denitrification) و تبدیل نیترات به گاز نیتروژن.",
+                            before: "خروجی مخازن بی‌هوازی و جریان بازیافت داخلی از مخزن هوازی",
+                            after: "مخازن هوادهی (B-TK-2208 A/B)",
+                            specs: "۲ مخزن بتنی به حجم ۱۸۹.۴ مترمکعب مجهز به ۴ میکسر مستغرق (B-MX-2205 A~D).",
+                            startup: "اطمینان از اختلاط کامل بدون ایجاد تلاطم سطحی (جلوگیری از هوادهی ناخواسته)، تست پمپ‌های بازیافت داخلی."
+                        },
+                        {
+                            tag: "B-TK-2208 A/B",
+                            name: "مخازن هوادهی (Aerobic Tanks)",
+                            duty: "تجزیه مواد آلی (کاهش BOD/COD) و نیتریفیکاسیون آمونیوم در حضور اکسیژن.",
+                            before: "خروجی مخازن آنوکسیک",
+                            after: "حوضچه‌های زلال‌ساز ثانویه (B-TK-2209 A/B)",
+                            specs: "۲ مخزن بتنی به حجم ۹۰۰ مترمکعب، دیفیوزرهای حباب ریز (B-DF-2202 A/B)، ۶ پمپ بازیافت داخلی (B-P-2205 A~F).",
+                            startup: "تست نشتی شبکه دیفیوزرها پیش از آبگیری، تنظیم سنسورهای آنلاین DO و pH، کنترل حلقه آب سرویس کف‌زدا."
+                        },
+                        {
+                            tag: "B-BL-2201 A~F",
+                            name: "دمنده‌های هوای فرآیندی (Process Air Blowers)",
+                            duty: "تأمین هوای فشرده مورد نیاز مخازن هوادهی و سیستم ایرلیفت زلال‌سازها.",
+                            before: "هوای محیط از طریق فیلترهای مکش ورودی",
+                            after: "هدر هوای فشرده مخازن هوادهی (دبی ۲۹۶۶ مترمکعب بر ساعت)",
+                            specs: "دمنده‌های روتاری لوب (Roots Blower) مجهز به سایلنسر، شیر اطمینان (PSV) و اینورتر کنترل دور.",
+                            startup: "کنترل سطح روغن گیربکس، تست آزاد بودن چرخش روتور با دست، بررسی فشار دیسشارژ (۰.۶ barg) و دمای هوای خروجی."
+                        }
+                    ]
+                },
+                {
+                    id: "clarifier",
+                    name: "زلال‌سازی و گندزدایی",
+                    icon: "fa-shield-halved",
+                    items: [
+                        {
+                            tag: "B-TK-2209 A/B",
+                            name: "حوضچه‌های زلال‌ساز ثانویه (Clarifiers)",
+                            duty: "ته‌نشینی لخته‌های بیولوژیکی، شفاف‌سازی پساب نهایی و جداسازی لجن برگشتی و مازاد.",
+                            before: "پساب هوادهی‌شده خروجی از B-TK-2208 A/B",
+                            after: "حوضچه تماس گندزدایی و ایستگاه پمپاژ لجن (B-P-2206 A~F)",
+                            specs: "۲ حوضچه بتنی با سطح ۷۵ مترمربع و ارتفاع ۵ متر، مجهز به ۶ پمپ ایرلیفت لجن (B-P-2206 A~F).",
+                            startup: "تراز بودن سرریزهای خروجی، تست عملکرد ایرلیفت‌های تخلیه لجن، کالیبراسیون آنالایزر کدورت و TSS خروجی."
+                        },
+                        {
+                            tag: "B-TK-2217 / P-2212",
+                            name: "پکیج گندزدایی هیپوکلریت سدیم (Chlorination Package)",
+                            duty: "گندزدایی نهایی پساب تصفیه‌شده پیش از ارسال به شبکه پساب تصفیه‌شده مجتمع.",
+                            before: "پساب شفاف خروجی زلال‌سازها",
+                            after: "خط خروجی پساب تصفیه‌شده به سمت Battery Limit",
+                            specs: "مخزن ذخیره پلی‌اتیلن ۲ مترمکعبی (B-TK-2217) و ۲ پمپ دوزینگ (B-P-2212 A/B) با ظرفیت ۱۰.۳ لیتر بر ساعت.",
+                            startup: "تست دوش و چشم‌شوی ایمنی مجاور پکیج، کالیبراسیون دبی پمپ‌های دوزینگ و کنترل کلر باقیمانده."
+                        }
+                    ]
+                },
+                {
+                    id: "sludge",
+                    name: "مدیریت و آبگیری لجن",
+                    icon: "fa-layer-group",
+                    items: [
+                        {
+                            tag: "B-TK-2211",
+                            name: "تغلیظ‌کننده ثقلی لجن (Gravity Sludge Thickener)",
+                            duty: "افزایش غلظت جامدات لجن مازاد بیولوژیکی و کاهش حجم آن پیش از ورود به هاضم.",
+                            before: "لجن مازاد از زلال‌سازها",
+                            after: "هاضم هوازی لجن (B-TK-2212) و مخزن آب رویی (B-TK-2213)",
+                            specs: "مخزن بتنی با سطح ۲۷.۰۴ مترمربع و ارتفاع ۵ متر همراه با پمپ‌های انتقال لجن غلیظ (B-P-2207 A/B).",
+                            startup: "تست مکانیکی پل دوار و پاروهای تغلیظ‌کننده، بررسی سرریز آب زلال (Supernatant) و پمپ‌های انتقال."
+                        },
+                        {
+                            tag: "B-TK-2212",
+                            name: "مخزن هاضم هوازی لجن (Aerobic Digester Tank)",
+                            duty: "تثبیت بیولوژیکی لجن غلیظ‌شده و کاهش مواد آلی فرار و بوی نامطبوع.",
+                            before: "خروجی تغلیظ‌کننده لجن (B-TK-2211)",
+                            after: "واحد آبگیری سانتریفیوژ / دکانتر (B-DC-2201 A/B)",
+                            specs: "مخزن بتنی به حجم ۹۳۷.۵ مترمکعب مجهز به دیفیوزر (B-DF-2203) و بلوورهای اختصاصی (B-BL-2202 A~C).",
+                            startup: "راه‌اندازی بلوورهای هوادهی هاضم (دبی ۱۰۸۴ مترمکعب بر ساعت)، کنترل سطح DO و تست پمپ‌های انتقال به آبگیری (B-P-2208 A/B)."
+                        },
+                        {
+                            tag: "B-DC-2201 A/B",
+                            name: "پکیج آبگیری سانتریفیوژ (Decanter Dewatering Unit)",
+                            duty: "جداسازی آب از لجن تثبیت‌شده با تزریق پلیمر و تولید کیک لجن خشک (۱۰ تا ۳۵ درصد جامد).",
+                            before: "لجن تثبیت‌شده از هاضم و پکیج پلیمر (B-TK-2218/2219)",
+                            after: "مخزن آب رویی آبگیری (B-TK-2228) و انتقال کیک لجن به زباله‌سوز",
+                            specs: "۲ دستگاه سانتریفیوژ دکانتر ۱۰۰٪ همراه با پمپ‌های آب رویی (B-P-2220 A/B).",
+                            startup: "تست بالانس و ارتعاش سانتریفیوژ در دور نامی، آماده‌سازی محلول پلیمر کاتیونی و تست اینترلاک قطع تغذیه لجن."
+                        }
+                    ]
+                },
+                {
+                    id: "instruments",
+                    name: "ابزار دقیق و کنترل",
+                    icon: "fa-gauge-high",
+                    items: [
+                        {
+                            tag: "FIT-101 ~ 104",
+                            name: "فلومترهای مغناطیسی خطوط لجن و پساب (Flow Transmitters)",
+                            duty: "اندازه‌گیری دقیق دبی لجن برگشتی (RAS)، لجن مازاد و جریان‌های فرآیندی جهت کنترل بالانس.",
+                            before: "خطوط مکش/رانش پمپ‌های لجن و پساب",
+                            after: "سیستم کنترل مرکزی (DCS / PLC)",
+                            specs: "نوع الکترومغناطیسی با لاینر PTFE و خروجی ۴-۲۰ میلی‌آمپر + پروتکل HART.",
+                            startup: "اطمینان از پر بودن کامل لوله از سیال (Full Pipe)، بررسی ارتینگ رینگ‌ها و لوپ‌چک سیگنال تا اتاق کنترل."
+                        },
+                        {
+                            tag: "B-PT-2233 / 2234",
+                            name: "ترانسمیترهای فشار خطوط هوا و پکیج‌ها (Pressure Transmitters)",
+                            duty: "پایش فشار هوای فشرده دمنده‌ها، مخازن اشباع DAF و خطوط تزریق مواد شیمیایی.",
+                            before: "تپ‌های فشار روی مخازن تحت فشار و هدرهای هوا",
+                            after: "سیستم کنترل و اینترلاک حفاظتی (SIS/PLC)",
+                            specs: "سنسور دیافراگمی استنلس استیل ۳۱۶L همراه با منیفولد ولو و نمایشگر محلی.",
+                            startup: "تست نشتی اتصالات تیوبینگ، صفر کردن (Zero Trim) ترانسمیتر در فشار اتمسفر و تست آلارم‌های فشار بالا (PAH)."
+                        },
+                        {
+                            tag: "AIT-DO / pH",
+                            name: "آنالایزرهای آنلاین کیفیت آب (DO, pH, Turbidity Analyzers)",
+                            duty: "اندازه‌گیری پیوسته اکسیژن محلول در حوضچه‌های هوادهی و pH/کدورت در نقاط کنترلی.",
+                            before: "پروب‌های غوطه‌ور در مخازن انعقاد، هوادهی و خروجی زلال‌ساز",
+                            after: "کنترلر دور اینورتر دمنده‌ها و پمپ‌های دوزینگ اسید/باز",
+                            specs: "سنسورهای اپتیکال DO و الکترودهای صنعتی pH با سیستم تمیزکننده خودکار.",
+                            startup: "کالیبراسیون دو نقطه‌ای با محلول‌های بافر استاندارد، بررسی سلامت کابل شیلددار و تایم پاسخ‌دهی حلقه کنترل."
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // ---------------------------------------------------------------------
+        // 2. INDEXEDDB PERSISTENT STORAGE LAYER (ذخیره‌سازی پایدار در مرورگر)
+        // ---------------------------------------------------------------------
+        const DB_NAME = "IndustrialCommissioningDB";
+        const DB_VERSION = 1;
+        const STORE_NAME = "units";
+        let dbInstance = null;
+        let unitsData = [];
+        let currentUnitId = null;
+        let currentActiveCategory = 0;
+        let currentActiveEquipment = null;
+        let stagedNewUnitFiles = [];
+
+        function initDatabase() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                request.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains(STORE_NAME)) {
+                        db.createObjectStore(STORE_NAME, { keyPath: "id" });
+                    }
+                };
+                request.onsuccess = (e) => {
+                    dbInstance = e.target.result;
+                    resolve(dbInstance);
+                };
+                request.onerror = (e) => reject(e.target.error);
+            });
+        }
+
+        function loadAllUnitsFromDB() {
+            return new Promise((resolve, reject) => {
+                const tx = dbInstance.transaction(STORE_NAME, "readonly");
+                const store = tx.objectStore(STORE_NAME);
+                const req = store.getAll();
+                req.onsuccess = () => resolve(req.result || []);
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        function saveUnitToDB(unit) {
+            return new Promise((resolve, reject) => {
+                const tx = dbInstance.transaction(STORE_NAME, "readwrite");
+                const store = tx.objectStore(STORE_NAME);
+                const req = store.put(unit);
+                req.onsuccess = () => resolve();
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        function deleteUnitFromDB(unitId) {
+            return new Promise((resolve, reject) => {
+                const tx = dbInstance.transaction(STORE_NAME, "readwrite");
+                const store = tx.objectStore(STORE_NAME);
+                const req = store.delete(unitId);
+                req.onsuccess = () => resolve();
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        // ---------------------------------------------------------------------
+        // 3. APP INITIALIZATION & NAVIGATION
+        // ---------------------------------------------------------------------
+        async function bootstrapApp() {
+            try {
+                await initDatabase();
+                let storedUnits = await loadAllUnitsFromDB();
+                if (storedUnits.length === 0) {
+                    // Seed default WWTP Phase 2 unit
+                    await saveUnitToDB(DEFAULT_WWT_UNIT);
+                    storedUnits = [DEFAULT_WWT_UNIT];
+                }
+                unitsData = storedUnits;
+                switchToHub();
+            } catch (err) {
+                console.error("DB Error:", err);
+                unitsData = [DEFAULT_WWT_UNIT];
+                switchToHub();
+            }
+        }
+
+        function switchToHub() {
+            currentUnitId = null;
+            document.getElementById('unitsHubView').classList.remove('hidden');
+            document.getElementById('unitDashboardView').classList.add('hidden');
+            document.getElementById('backToHubBtn').classList.add('hidden');
+            document.getElementById('breadcrumbNav').innerHTML = `
+                <span class="text-teal-600 font-bold"><i class="fa-solid fa-layer-group ml-1"></i>لیست واحدهای صنعتی</span>
+            `;
+            renderUnitsGrid();
+        }
+
+        function openUnitDashboard(unitId) {
+            const unit = unitsData.find(u => u.id === unitId);
+            if (!unit) return;
+
+            currentUnitId = unitId;
+            currentActiveCategory = 0;
+            currentActiveEquipment = null;
+
+            document.getElementById('unitsHubView').classList.add('hidden');
+            document.getElementById('unitDashboardView').classList.remove('hidden');
+            document.getElementById('backToHubBtn').classList.remove('hidden');
+
+            // Update Breadcrumb
+            document.getElementById('breadcrumbNav').innerHTML = `
+                <button onclick="switchToHub()" class="hover:text-teal-600 transition">واحدها</button>
+                <i class="fa-solid fa-chevron-left text-[10px] text-slate-400"></i>
+                <span class="text-orange-600 font-bold">${unit.name}</span>
+            `;
+
+            // Populate Unit Banner
+            document.getElementById('dashUnitName').innerText = unit.name;
+            document.getElementById('dashUnitCode').innerText = unit.code || 'UNIT';
+            document.getElementById('dashUnitPhase').innerText = unit.phase || 'فاز عملیاتی';
+            document.getElementById('dashUnitDesc').innerText = unit.description || 'داشبورد تخصصی تجهیزات و دستورالعمل‌های راه‌اندازی';
+            document.getElementById('dashDocsCount').innerText = (unit.documents || []).length;
+            document.getElementById('dashUnitIcon').innerHTML = `<i class="fa-solid ${unit.icon || 'fa-industry'}"></i>`;
+
+            // Reset Search & Detail View
+            document.getElementById('searchInput').value = '';
+            document.getElementById('emptyState').classList.remove('hidden');
+            document.getElementById('activeState').classList.add('hidden');
+
+            renderCategories();
+            selectCategory(0);
+            updateTotalCount();
+        }
+
+        // ---------------------------------------------------------------------
+        // 4. VIEW 1: RENDER UNITS PORTFOLIO GRID
+        // ---------------------------------------------------------------------
+        function renderUnitsGrid() {
+            const query = (document.getElementById('unitSearchInput')?.value || '').toLowerCase().trim();
+            const grid = document.getElementById('unitsGrid');
+            grid.innerHTML = '';
+
+            let totalEquips = 0;
+            let totalDocs = 0;
+
+            unitsData.forEach(u => {
+                const eqCount = (u.categories || []).reduce((acc, c) => acc + (c.items || []).length, 0);
+                totalEquips += eqCount;
+                totalDocs += (u.documents || []).length;
+            });
+
+            document.getElementById('hubTotalUnits').innerText = unitsData.length;
+            document.getElementById('hubTotalEquips').innerText = totalEquips;
+            document.getElementById('hubTotalDocs').innerText = totalDocs;
+
+            const filtered = unitsData.filter(u => 
+                u.name.toLowerCase().includes(query) || 
+                (u.code && u.code.toLowerCase().includes(query)) ||
+                (u.phase && u.phase.toLowerCase().includes(query))
+            );
+
+            filtered.forEach(unit => {
+                const eqCount = (unit.categories || []).reduce((acc, c) => acc + (c.items || []).length, 0);
+                const docCount = (unit.documents || []).length;
+                const catCount = (unit.categories || []).length;
+
+                const card = document.createElement('div');
+                card.className = "glass-panel rounded-3xl p-5 border border-slate-200/90 hover:border-teal-400 transition-all duration-300 flex flex-col justify-between group hover:shadow-xl hover:shadow-teal-500/10 relative";
+                
+                card.innerHTML = `
+                    <div>
+                        <!-- Top Row: Icon, Code & Edit/Delete Actions -->
+                        <div class="flex justify-between items-start gap-2 mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 text-white flex items-center justify-center text-xl shadow-md group-hover:scale-105 transition-transform">
+                                    <i class="fa-solid ${unit.icon || 'fa-industry'}"></i>
+                                </div>
+                                <div>
+                                    <span class="px-2.5 py-0.5 bg-teal-50 text-teal-700 text-[11px] font-black rounded-md border border-teal-200 font-mono">${unit.code || 'UNIT'}</span>
+                                    <span class="block text-[11px] text-orange-600 font-bold mt-1">${unit.phase || 'فاز ۲'}</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <button onclick="event.stopPropagation(); openEditUnitModal('${unit.id}')" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-orange-100 text-slate-500 hover:text-orange-600 flex items-center justify-center transition" title="ویرایش نام واحد">
+                                    <i class="fa-solid fa-pen text-xs"></i>
+                                </button>
+                                ${unit.id !== 'unit-wwt-p2' ? `
+                                <button onclick="event.stopPropagation(); deleteUnit('${unit.id}')" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-red-100 text-slate-500 hover:text-red-600 flex items-center justify-center transition" title="حذف واحد">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                </button>` : ''}
+                            </div>
+                        </div>
+
+                        <!-- Unit Title & Description (Click opens dashboard) -->
+                        <div onclick="openUnitDashboard('${unit.id}')" class="cursor-pointer">
+                            <h4 class="text-lg font-black text-slate-900 group-hover:text-teal-700 transition mb-2 line-clamp-1">${unit.name}</h4>
+                            <p class="text-xs text-slate-500 leading-relaxed line-clamp-2 mb-4 min-h-[36px]">${unit.description || 'واحد صنعتی تعریف‌شده در سامانه راه‌اندازی'}</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <!-- Metrics Pills -->
+                        <div class="grid grid-cols-3 gap-2 mb-4 text-center">
+                            <div class="bg-slate-50 p-2 rounded-xl border border-slate-100">
+                                <span class="text-[10px] text-slate-400 block">تجهیزات</span>
+                                <span class="text-sm font-black text-slate-800">${eqCount}</span>
+                            </div>
+                            <div class="bg-slate-50 p-2 rounded-xl border border-slate-100">
+                                <span class="text-[10px] text-slate-400 block">بخش‌ها</span>
+                                <span class="text-sm font-black text-teal-600">${catCount}</span>
+                            </div>
+                            <div class="bg-slate-50 p-2 rounded-xl border border-slate-100">
+                                <span class="text-[10px] text-slate-400 block">مدارک</span>
+                                <span class="text-sm font-black text-orange-600">${docCount}</span>
+                            </div>
+                        </div>
+
+                        <!-- Footer Buttons -->
+                        <div class="flex items-center gap-2">
+                            <button onclick="openUnitDashboard('${unit.id}')" class="flex-grow py-2.5 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white text-xs font-bold shadow-sm transition flex items-center justify-center gap-2">
+                                <span>ورود به داشبورد واحد</span>
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </button>
+                            <button onclick="openUnitDocsModal('${unit.id}')" class="py-2.5 px-3 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 text-xs font-bold transition" title="مدارک مهندسی و افزودن مدرک">
+                                <i class="fa-solid fa-folder-open"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ---------------------------------------------------------------------
+        // 5. VIEW 2: UNIT EQUIPMENT DASHBOARD LOGIC
+        // ---------------------------------------------------------------------
+        function getCurrentUnit() {
+            return unitsData.find(u => u.id === currentUnitId);
+        }
+
+        function renderCategories() {
+            const unit = getCurrentUnit();
+            const container = document.getElementById('categoryTabs');
+            container.innerHTML = '';
+            if (!unit || !unit.categories) return;
+
+            unit.categories.forEach((cat, index) => {
+                const isActive = index === currentActiveCategory;
+                const btn = document.createElement('button');
+                btn.className = `flex flex-col items-center justify-center p-2.5 rounded-xl border transition-all duration-200 ${
+                    isActive 
+                    ? 'bg-gradient-to-br from-teal-50 to-emerald-50 border-teal-500 text-teal-800 shadow-sm font-bold' 
+                    : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium'
+                }`;
+                btn.innerHTML = `
+                    <i class="fa-solid ${cat.icon || 'fa-gears'} text-base mb-1 ${isActive ? 'text-orange-500' : 'text-teal-600'}"></i>
+                    <span class="text-[11px] text-center line-clamp-1">${cat.name}</span>
+                `;
+                btn.onclick = () => selectCategory(index);
+                container.appendChild(btn);
+            });
+        }
+
+        function selectCategory(index) {
+            const unit = getCurrentUnit();
+            if (!unit || !unit.categories || !unit.categories[index]) return;
+            currentActiveCategory = index;
+            renderCategories();
+            const items = unit.categories[index].items || [];
+            document.getElementById('categoryEquipCount').innerText = `${items.length} تجهیز`;
+            renderEquipmentList(items);
+        }
+
+        function renderEquipmentList(items) {
+            const container = document.getElementById('equipmentList');
+            container.innerHTML = '';
+
+            if (!items || items.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">تجهیزی در این دسته ثبت نشده است.</p>`;
+                return;
+            }
+
+            items.forEach((item) => {
+                const isSelected = currentActiveEquipment && currentActiveEquipment.name === item.name && currentActiveEquipment.tag === item.tag;
+                const card = document.createElement('div');
+                card.className = `p-3.5 rounded-xl border cursor-pointer transition-all duration-200 flex items-center justify-between group ${
+                    isSelected
+                    ? 'bg-gradient-to-r from-teal-50 via-emerald-50/70 to-orange-50/50 border-teal-500 text-slate-900 shadow-xs font-bold'
+                    : 'bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50 hover:border-teal-300'
+                }`;
+                card.innerHTML = `
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <div class="w-9 h-9 rounded-lg ${isSelected ? 'bg-orange-500 text-white' : 'bg-teal-50 text-teal-600 group-hover:bg-teal-100'} flex items-center justify-center text-xs shrink-0 transition">
+                            <i class="fa-solid fa-cube"></i>
+                        </div>
+                        <div class="overflow-hidden">
+                            ${item.tag ? `<span class="text-[10px] font-mono font-black text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded border border-orange-200/70 inline-block mb-0.5">${item.tag}</span>` : ''}
+                            <span class="text-xs sm:text-sm block truncate text-slate-800">${item.name}</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-left text-xs text-slate-400 group-hover:text-teal-600 transition transform group-hover:-translate-x-1 shrink-0 mr-2"></i>
+                `;
+                card.onclick = () => selectEquipment(item);
+                container.appendChild(card);
+            });
+        }
+
+        function selectEquipment(item) {
+            const unit = getCurrentUnit();
+            currentActiveEquipment = item;
+            
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) {
+                renderEquipmentList(unit.categories[currentActiveCategory].items);
+            }
+
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('activeState').classList.remove('hidden');
+
+            document.getElementById('detailCategory').innerText = item.catName || unit.categories[currentActiveCategory].name;
+            document.getElementById('detailTag').innerText = item.tag || 'NO-TAG';
+            document.getElementById('detailTitle').innerText = item.name;
+            document.getElementById('detailDuty').innerText = item.duty || 'شرح وظیفه ثبت نشده است.';
+            document.getElementById('detailSpecs').innerText = item.specs || 'مشخصات فنی استاندارد پروژه.';
+            document.getElementById('detailBefore').innerText = item.before || 'خط فرآیندی بالادست';
+            document.getElementById('detailAfter').innerText = item.after || 'خط فرآیندی پایین‌دست';
+            document.getElementById('detailStartup').innerText = item.startup || 'بررسی سلامت مکانیکی، برقی، ابزار دقیق و ایمنی پیش از استارت.';
+            
+            const catIcon = unit.categories[currentActiveCategory]?.icon || 'fa-gear';
+            document.getElementById('detailIcon').innerHTML = `<i class="fa-solid ${catIcon}"></i>`;
+        }
+
+        function filterEquipment() {
+            const unit = getCurrentUnit();
+            if (!unit) return;
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            if (!query) {
+                renderEquipmentList(unit.categories[currentActiveCategory].items);
+                document.getElementById('categoryEquipCount').innerText = `${unit.categories[currentActiveCategory].items.length} تجهیز`;
+                return;
+            }
+
+            let allMatchedItems = [];
+            unit.categories.forEach((cat, catIdx) => {
+                (cat.items || []).forEach(item => {
+                    if (
+                        item.name.toLowerCase().includes(query) || 
+                        (item.tag && item.tag.toLowerCase().includes(query)) ||
+                        (item.duty && item.duty.toLowerCase().includes(query))
+                    ) {
+                        allMatchedItems.push({ ...item, catName: cat.name, catIdx: catIdx });
+                    }
+                });
+            });
+
+            document.getElementById('categoryEquipCount').innerText = `${allMatchedItems.length} نتیجه جستجو`;
+            renderEquipmentList(allMatchedItems);
+        }
+
+        function updateTotalCount() {
+            const unit = getCurrentUnit();
+            if (!unit) return;
+            let total = 0;
+            (unit.categories || []).forEach(cat => total += (cat.items || []).length);
+            document.getElementById('equipCountBadge').innerText = `تعداد کل تجهیزات واحد: ${total} دستگاه`;
+        }
+
+        // ---------------------------------------------------------------------
+        // 6. EDIT UNIT NAME & METADATA
+        // ---------------------------------------------------------------------
+        function openEditUnitModal(unitId) {
+            const unit = unitsData.find(u => u.id === unitId);
+            if (!unit) return;
+            document.getElementById('editUnitId').value = unit.id;
+            document.getElementById('editUnitNameInput').value = unit.name;
+            document.getElementById('editUnitCodeInput').value = unit.code || '';
+            document.getElementById('editUnitPhaseInput').value = unit.phase || '';
+            document.getElementById('editUnitDescInput').value = unit.description || '';
+            document.getElementById('editUnitModal').classList.remove('hidden');
+        }
+
+        function closeEditUnitModal() {
+            document.getElementById('editUnitModal').classList.add('hidden');
+        }
+
+        async function saveUnitEdits() {
+            const id = document.getElementById('editUnitId').value;
+            const newName = document.getElementById('editUnitNameInput').value.trim();
+            if (!newName) {
+                showToast("لطفاً نام واحد را وارد کنید.", "error");
+                return;
+            }
+            const unit = unitsData.find(u => u.id === id);
+            if (!unit) return;
+
+            unit.name = newName;
+            unit.code = document.getElementById('editUnitCodeInput').value.trim() || unit.code;
+            unit.phase = document.getElementById('editUnitPhaseInput').value.trim();
+            unit.description = document.getElementById('editUnitDescInput').value.trim();
+
+            await saveUnitToDB(unit);
+            closeEditUnitModal();
+            showToast("مشخصات واحد با موفقیت ویرایش و ذخیره شد.");
+
+            if (currentUnitId === id) {
+                openUnitDashboard(id);
+            } else {
+                renderUnitsGrid();
+            }
+        }
+
+        async function deleteUnit(unitId) {
+            await deleteUnitFromDB(unitId);
+            unitsData = unitsData.filter(u => u.id !== unitId);
+            renderUnitsGrid();
+            showToast("واحد مورد نظر از سامانه حذف شد.");
+        }
+
+        // ---------------------------------------------------------------------
+        // 7. EXPORT EQUIPMENT LIST FOR CURRENT UNIT (CSV / EXCEL)
+        // ---------------------------------------------------------------------
+        function exportUnitEquipmentCSV() {
+            const unit = getCurrentUnit();
+            if (!unit) return;
+
+            let csvContent = "\uFEFF"; // UTF-8 BOM for Persian support in Excel
+            csvContent += "ردیف,کد واحد,نام واحد,دسته‌بندی,تگ تجهیز (Tag),نام تجهیز,وظیفه اصلی,ارتباط با قبل,ارتباط با بعد,مشخصات فنی,شرایط راه‌اندازی\n";
+
+            let rowIndex = 1;
+            (unit.categories || []).forEach(cat => {
+                (cat.items || []).forEach(item => {
+                    const row = [
+                        rowIndex++,
+                        `"${(unit.code || '').replace(/"/g, '""')}"`,
+                        `"${(unit.name || '').replace(/"/g, '""')}"`,
+                        `"${(cat.name || '').replace(/"/g, '""')}"`,
+                        `"${(item.tag || '').replace(/"/g, '""')}"`,
+                        `"${(item.name || '').replace(/"/g, '""')}"`,
+                        `"${(item.duty || '').replace(/"/g, '""')}"`,
+                        `"${(item.before || '').replace(/"/g, '""')}"`,
+                        `"${(item.after || '').replace(/"/g, '""')}"`,
+                        `"${(item.specs || '').replace(/"/g, '""')}"`,
+                        `"${(item.startup || '').replace(/"/g, '""')}"`
+                    ];
+                    csvContent += row.join(",") + "\n";
+                });
+            });
+
+            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `Equipment_List_${unit.code || 'Unit'}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            showToast(`فایل خروجی تجهیزات واحد «${unit.name}» دانلود شد.`);
+        }
+
+        // ---------------------------------------------------------------------
+        // 8. ADD NEW UNIT & AI DOCUMENT ANALYZER (GEMINI API)
+        // ---------------------------------------------------------------------
+        function openAddUnitModal() {
+            stagedNewUnitFiles = [];
+            document.getElementById('newUnitName').value = '';
+            document.getElementById('newUnitCode').value = '';
+            document.getElementById('newUnitDesc').value = '';
+            document.getElementById('newUnitRawText').value = '';
+            document.getElementById('newUnitFilesList').innerHTML = '';
+            document.getElementById('analysisProgressBox').classList.add('hidden');
+            document.getElementById('submitNewUnitBtn').disabled = false;
+            document.getElementById('addUnitModal').classList.remove('hidden');
+        }
+
+        function closeAddUnitModal() {
+            document.getElementById('addUnitModal').classList.add('hidden');
+        }
+
+        function handleNewUnitFilesSelect(event) {
+            const files = Array.from(event.target.files || []);
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    stagedNewUnitFiles.push({
+                        id: 'doc-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5),
+                        name: file.name,
+                        type: file.type || 'application/octet-stream',
+                        dataUrl: e.target.result,
+                        docCategory: detectDocCategory(file.name),
+                        uploadDate: new Date().toLocaleDateString('fa-IR')
+                    });
+                    renderStagedFilesList();
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function detectDocCategory(filename) {
+            const upper = filename.toUpperCase();
+            if (upper.includes('PID') || upper.includes('P&ID')) return 'P&ID';
+            if (upper.includes('PFD')) return 'PFD';
+            if (upper.includes('BFD') || upper.includes('BD')) return 'Block Flow Diagram';
+            if (upper.includes('PLOT')) return 'Plot Plan';
+            if (upper.includes('PDB') || upper.includes('DESC')) return 'Process Description';
+            return 'مدرک مهندسی';
+        }
+
+        function renderStagedFilesList() {
+            const container = document.getElementById('newUnitFilesList');
+            container.innerHTML = '';
+            stagedNewUnitFiles.forEach((f, idx) => {
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-xs";
+                div.innerHTML = `
+                    <div class="flex items-center gap-2 truncate">
+                        <i class="fa-solid fa-file-lines text-teal-600"></i>
+                        <span class="font-bold text-slate-700 truncate">${f.name}</span>
+                        <span class="px-2 py-0.5 bg-orange-50 text-orange-700 rounded text-[10px] font-bold">${f.docCategory}</span>
+                    </div>
+                    <button onclick="stagedNewUnitFiles.splice(${idx}, 1); renderStagedFilesList();" class="text-red-500 hover:text-red-700 px-1.5">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        async function analyzeDocumentsWithGemini(unitName, unitDesc, docs, rawText) {
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const docNames = docs.map(d => `${d.name} (${d.docCategory})`).join(", ");
+            const promptText = `
+شما یک مهندس ارشد راه‌اندازی (Commissioning Engineer) در یک مجتمع صنعتی بزرگ هستید.
+کاربر یک واحد صنعتی جدید با مشخصات زیر تعریف کرده است:
+نام واحد: ${unitName}
+توضیحات: ${unitDesc}
+لیست مدارک بارگذاری شده: ${docNames || 'ندارد'}
+متن یا اطلاعات فنی تکمیلی ارائه شده:
+${rawText || 'اطلاعات متنی مستقیم وارد نشده است، بر اساس نام واحد و استانداردهای صنعتی و مدارک مهندسی معمول این واحد، تجهیزات کامل آن را تولید کن.'}
+
+وظیفه شما:
+تمامی تجهیزات فرآیندی، مکانیکی، پکیج‌های شیمیایی و تجهیزات ابزار دقیق (ترانسمیترها، کنترل‌ولوها، آنالایزرها) مربوط به این واحد را در قالب دسته‌بندی‌های منطقی استخراج کنید.
+خروجی باید دقیقاً مطابق اسکیمای JSON درخواستی و به زبان فارسی روان و تخصصی مهندسی باشد.
+`;
+
+            const parts = [{ text: promptText }];
+
+            // Attach up to 3 image documents directly to multimodal input if available
+            docs.filter(d => d.type && d.type.startsWith('image/') && d.dataUrl).slice(0, 3).forEach(imgDoc => {
+                const base64Data = imgDoc.dataUrl.split(',')[1];
+                if (base64Data) {
+                    parts.push({
+                        inlineData: {
+                            mimeType: imgDoc.type,
+                            data: base64Data
+                        }
+                    });
+                }
+            });
+
+            const payload = {
+                contents: [{ role: "user", parts: parts }],
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            categories: {
+                                type: "ARRAY",
+                                items: {
+                                    type: "OBJECT",
+                                    properties: {
+                                        id: { type: "STRING" },
+                                        name: { type: "STRING" },
+                                        icon: { type: "STRING" },
+                                        items: {
+                                            type: "ARRAY",
+                                            items: {
+                                                type: "OBJECT",
+                                                properties: {
+                                                    tag: { type: "STRING" },
+                                                    name: { type: "STRING" },
+                                                    duty: { type: "STRING" },
+                                                    before: { type: "STRING" },
+                                                    after: { type: "STRING" },
+                                                    specs: { type: "STRING" },
+                                                    startup: { type: "STRING" }
+                                                },
+                                                required: ["tag", "name", "duty", "before", "after", "specs", "startup"]
+                                            }
+                                        }
+                                    },
+                                    required: ["id", "name", "icon", "items"]
+                                }
+                            }
+                        },
+                        required: ["categories"]
+                    }
+                }
+            };
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) throw new Error("API Error");
+            const result = await response.json();
+            const jsonText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (!jsonText) throw new Error("Empty AI Response");
+            return JSON.parse(jsonText);
+        }
+
+        function generateFallbackCategories(unitName) {
+            return [
+                {
+                    id: "process-equip",
+                    name: "تجهیزات اصلی فرآیندی",
+                    icon: "fa-gears",
+                    items: [
+                        {
+                            tag: "TK-101 A/B",
+                            name: `مخازن ذخیره و فرآیندی ${unitName}`,
+                            duty: "ذخیره‌سازی و ایجاد زمان ماند لازم برای تثبیت جریان در واحد.",
+                            before: "خط ورودی از Battery Limit",
+                            after: "پمپ‌های انتقال فرآیندی",
+                            specs: "مجهز به نازل‌های ورودی، خروجی، درین، ونت و نشانگر سطح.",
+                            startup: "بازرسی داخلی، تست هیدرواستاتیک و کنترل آب‌بندی فلنج‌ها پیش از بهره‌برداری."
+                        },
+                        {
+                            tag: "P-101 A/B",
+                            name: `پمپ‌های اصلی انتقال ${unitName}`,
+                            duty: "تأمین هد و دبی مورد نیاز جهت انتقال سیال در مسیر فرآیند.",
+                            before: "خروجی مخازن ذخیره TK-101",
+                            after: "واحدهای عملیاتی پایین‌دست",
+                            specs: "الکتروپمپ سانتریفیوژ با آرایش (1+1) Duty/Standby.",
+                            startup: "هم‌محوری (Alignment) کوپلینگ، هواگیری کامل پوسته و تست جهت چرخش موتور."
+                        }
+                    ]
+                },
+                {
+                    id: "instruments-auto",
+                    name: "ابزار دقیق و کنترل",
+                    icon: "fa-gauge-high",
+                    items: [
+                        {
+                            tag: "PT-101 / FT-101",
+                            name: "ترانسمیترهای فشار و جریان اصلی",
+                            duty: "پایش پیوسته فشار و دبی خطوط اصلی و ارسال سیگنال به اتاق کنترل.",
+                            before: "خطوط اصلی فرآیندی",
+                            after: "سیستم کنترل مرکزی (DCS)",
+                            specs: "خروجی ۴-۲۰ میلی‌آمپر HART با درجه حفاظت IP67.",
+                            startup: "کالیبراسیون و لوپ‌چک کامل تا نمایشگر اتاق کنترل."
+                        }
+                    ]
+                }
+            ];
+        }
+
+        async function createAndAnalyzeUnit() {
+            const name = document.getElementById('newUnitName').value.trim();
+            if (!name) {
+                showToast("لطفاً نام واحد صنعتی را وارد کنید.", "error");
+                return;
+            }
+
+            const code = document.getElementById('newUnitCode').value.trim() || `UNIT-${unitsData.length + 101}`;
+            const phase = document.getElementById('newUnitPhase').value.trim() || "فاز ۲";
+            const desc = document.getElementById('newUnitDesc').value.trim() || `واحد عملیاتی ${name} در مجتمع صنعتی`;
+            const rawText = document.getElementById('newUnitRawText').value.trim();
+
+            document.getElementById('analysisProgressBox').classList.remove('hidden');
+            document.getElementById('submitNewUnitBtn').disabled = true;
+
+            let extractedCategories = [];
+            try {
+                const aiResult = await analyzeDocumentsWithGemini(name, desc, stagedNewUnitFiles, rawText);
+                extractedCategories = aiResult.categories && aiResult.categories.length > 0 
+                    ? aiResult.categories 
+                    : generateFallbackCategories(name);
+            } catch (err) {
+                extractedCategories = generateFallbackCategories(name);
+            }
+
+            const newUnit = {
+                id: "unit-" + Date.now(),
+                name,
+                code,
+                phase,
+                icon: "fa-industry",
+                description: desc,
+                documents: [...stagedNewUnitFiles],
+                categories: extractedCategories
+            };
+
+            await saveUnitToDB(newUnit);
+            unitsData.push(newUnit);
+
+            closeAddUnitModal();
+            showToast(`واحد «${name}» با موفقیت ایجاد و آنالیز شد.`);
+            openUnitDashboard(newUnit.id);
+        }
+
+        // ---------------------------------------------------------------------
+        // 9. ENGINEERING DOCUMENTS VIEWER & APPEND NEW DOCS TO EXISTING UNIT
+        // ---------------------------------------------------------------------
+        let docsModalUnitId = null;
+
+        function openUnitDocsModal(unitId) {
+            docsModalUnitId = unitId;
+            const unit = unitsData.find(u => u.id === unitId);
+            if (!unit) return;
+
+            document.getElementById('docsModalUnitTitle').innerText = unit.name;
+            document.getElementById('appendProgressBanner').classList.add('hidden');
+            document.getElementById('docPreviewPane').innerHTML = `
+                <div class="text-center text-slate-400">
+                    <i class="fa-solid fa-file-lines text-4xl mb-2 text-slate-300"></i>
+                    <p class="text-xs">یک مدرک را از لیست سمت راست برای پیش‌نمایش انتخاب کنید</p>
+                </div>
+            `;
+            renderUnitDocsList(unit);
+            document.getElementById('unitDocsModal').classList.remove('hidden');
+        }
+
+        function closeUnitDocsModal() {
+            document.getElementById('unitDocsModal').classList.add('hidden');
+        }
+
+        function renderUnitDocsList(unit) {
+            const container = document.getElementById('unitDocsListContainer');
+            container.innerHTML = '';
+            const docs = unit.documents || [];
+
+            if (docs.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-8">هنوز مدرکی برای این واحد بارگذاری نشده است.</p>`;
+                return;
+            }
+
+            docs.forEach((doc, idx) => {
+                const item = document.createElement('div');
+                item.className = "p-3 rounded-xl bg-slate-50 hover:bg-teal-50/70 border border-slate-200 hover:border-teal-400 cursor-pointer transition flex items-center justify-between gap-2";
+                item.innerHTML = `
+                    <div class="overflow-hidden" onclick="previewDocument('${unit.id}', ${idx})">
+                        <span class="px-2 py-0.5 bg-orange-100 text-orange-700 text-[10px] font-bold rounded inline-block mb-1">${doc.docCategory || 'مدرک فنی'}</span>
+                        <h4 class="text-xs font-bold text-slate-800 truncate">${doc.name}</h4>
+                        <span class="text-[10px] text-slate-400 block mt-0.5">تاریخ ثبت: ${doc.uploadDate || '۱۴۰۵'}</span>
+                    </div>
+                    <button onclick="deleteDocumentFromUnit('${unit.id}', ${idx})" class="w-7 h-7 rounded-lg bg-white hover:bg-red-50 text-slate-400 hover:text-red-600 flex items-center justify-center border border-slate-200 shrink-0" title="حذف مدرک">
+                        <i class="fa-solid fa-trash text-xs"></i>
+                    </button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function previewDocument(unitId, docIdx) {
+            const unit = unitsData.find(u => u.id === unitId);
+            const doc = unit?.documents?.[docIdx];
+            if (!doc) return;
+
+            const pane = document.getElementById('docPreviewPane');
+            if (doc.dataUrl && doc.type.startsWith('image/')) {
+                pane.innerHTML = `<img src="${doc.dataUrl}" alt="${doc.name}" class="max-w-full max-h-[380px] rounded-xl shadow-sm object-contain">`;
+            } else if (doc.dataUrl && doc.type === 'application/pdf') {
+                pane.innerHTML = `<iframe src="${doc.dataUrl}" class="w-full h-[380px] rounded-xl border-0"></iframe>`;
+            } else {
+                pane.innerHTML = `
+                    <div class="text-center p-6 max-w-md">
+                        <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center text-3xl border border-teal-200">
+                            <i class="fa-solid fa-file-contract"></i>
+                        </div>
+                        <h4 class="text-sm font-black text-slate-800 mb-1">${doc.name}</h4>
+                        <span class="px-2.5 py-0.5 bg-orange-50 text-orange-700 text-xs font-bold rounded-full border border-orange-200 inline-block mb-3">${doc.docCategory}</span>
+                        <p class="text-xs text-slate-600 leading-relaxed bg-white p-3 rounded-xl border border-slate-200">
+                            ${doc.summary || 'این مدرک مهندسی در آرشیو واحد ثبت شده و تجهیزات مرتبط با آن در داشبورد استخراج گردیده است.'}
+                        </p>
+                    </div>
+                `;
+            }
+        }
+
+        async function deleteDocumentFromUnit(unitId, docIdx) {
+            const unit = unitsData.find(u => u.id === unitId);
+            if (!unit) return;
+            unit.documents.splice(docIdx, 1);
+            await saveUnitToDB(unit);
+            renderUnitDocsList(unit);
+            if (currentUnitId === unitId) {
+                document.getElementById('dashDocsCount').innerText = unit.documents.length;
+            }
+            renderUnitsGrid();
+            showToast("مدرک از آرشیو واحد حذف شد.");
+        }
+
+        async function appendDocsToCurrentUnit(event) {
+            const files = Array.from(event.target.files || []);
+            if (files.length === 0) return;
+
+            const unit = unitsData.find(u => u.id === docsModalUnitId);
+            if (!unit) return;
+
+            document.getElementById('appendProgressBanner').classList.remove('hidden');
+
+            const newDocs = await Promise.all(files.map(file => {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        resolve({
+                            id: 'doc-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5),
+                            name: file.name,
+                            type: file.type || 'application/octet-stream',
+                            dataUrl: e.target.result,
+                            docCategory: detectDocCategory(file.name),
+                            uploadDate: new Date().toLocaleDateString('fa-IR')
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }));
+
+            unit.documents = [...(unit.documents || []), ...newDocs];
+
+            try {
+                const aiResult = await analyzeDocumentsWithGemini(unit.name, unit.description, newDocs, `مدارک جدید افزوده‌شده: ${newDocs.map(d => d.name).join(', ')}`);
+                if (aiResult.categories && aiResult.categories.length > 0) {
+                    aiResult.categories.forEach(newCat => {
+                        const existingCat = unit.categories.find(c => c.name === newCat.name);
+                        if (existingCat) {
+                            existingCat.items.push(...newCat.items);
+                        } else {
+                            unit.categories.push(newCat);
+                        }
+                    });
+                }
+            } catch (e) {
+                // Keep documents saved even if offline
+            }
+
+            await saveUnitToDB(unit);
+            document.getElementById('appendProgressBanner').classList.add('hidden');
+            renderUnitDocsList(unit);
+            renderUnitsGrid();
+
+            if (currentUnitId === unit.id) {
+                document.getElementById('dashDocsCount').innerText = unit.documents.length;
+                renderCategories();
+                selectCategory(currentActiveCategory);
+                updateTotalCount();
+            }
+
+            showToast(`${newDocs.length} مدرک مهندسی جدید به واحد اضافه و پردازش شد.`);
+        }
+
+        // ---------------------------------------------------------------------
+        // 10. MANUAL EQUIPMENT ADD / DELETE INSIDE UNIT
+        // ---------------------------------------------------------------------
+        function openAddEquipmentModal() {
+            const unit = getCurrentUnit();
+            if (!unit) return;
+            const datalist = document.getElementById('existingCatsList');
+            datalist.innerHTML = '';
+            (unit.categories || []).forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.name;
+                datalist.appendChild(opt);
+            });
+
+            document.getElementById('eqTagInput').value = '';
+            document.getElementById('eqCatInput').value = unit.categories[currentActiveCategory]?.name || '';
+            document.getElementById('eqNameInput').value = '';
+            document.getElementById('eqDutyInput').value = '';
+            document.getElementById('eqBeforeInput').value = '';
+            document.getElementById('eqAfterInput').value = '';
+            document.getElementById('eqSpecsInput').value = '';
+            document.getElementById('eqStartupInput').value = '';
+
+            document.getElementById('addEquipModal').classList.remove('hidden');
+        }
+
+        function closeAddEquipmentModal() {
+            document.getElementById('addEquipModal').classList.add('hidden');
+        }
+
+        async function saveNewManualEquipment() {
+            const unit = getCurrentUnit();
+            if (!unit) return;
+
+            const tag = document.getElementById('eqTagInput').value.trim();
+            const catName = document.getElementById('eqCatInput').value.trim() || 'تجهیزات عمومی';
+            const name = document.getElementById('eqNameInput').value.trim();
+
+            if (!name) {
+                showToast("لطفاً نام تجهیز را وارد کنید.", "error");
+                return;
+            }
+
+            const newEquip = {
+                tag: tag || 'NEW-EQ',
+                name,
+                duty: document.getElementById('eqDutyInput').value.trim() || 'شرح وظیفه عملیاتی تجهیز',
+                before: document.getElementById('eqBeforeInput').value.trim() || 'خط ورودی فرآیند',
+                after: document.getElementById('eqAfterInput').value.trim() || 'خط خروجی فرآیند',
+                specs: document.getElementById('eqSpecsInput').value.trim() || 'مشخصات استاندارد پروژه',
+                startup: document.getElementById('eqStartupInput').value.trim() || 'بررسی کامل مکانیکی، برقی و ایمنی پیش از راه‌اندازی.'
+            };
+
+            let catIdx = unit.categories.findIndex(c => c.name === catName);
+            if (catIdx === -1) {
+                unit.categories.push({
+                    id: 'cat-' + Date.now(),
+                    name: catName,
+                    icon: 'fa-cube',
+                    items: [newEquip]
+                });
+                catIdx = unit.categories.length - 1;
+            } else {
+                unit.categories[catIdx].items.push(newEquip);
+            }
+
+            await saveUnitToDB(unit);
+            closeAddEquipmentModal();
+            selectCategory(catIdx);
+            selectEquipment(newEquip);
+            updateTotalCount();
+            showToast("تجهیز جدید با موفقیت به واحد اضافه و ذخیره شد.");
+        }
+
+        async function deleteCurrentEquipment() {
+            const unit = getCurrentUnit();
+            if (!unit || !currentActiveEquipment) return;
+
+            unit.categories.forEach(cat => {
+                cat.items = (cat.items || []).filter(item => !(item.name === currentActiveEquipment.name && item.tag === currentActiveEquipment.tag));
+            });
+
+            currentActiveEquipment = null;
+            await saveUnitToDB(unit);
+
+            document.getElementById('activeState').classList.add('hidden');
+            document.getElementById('emptyState').classList.remove('hidden');
+
+            selectCategory(currentActiveCategory);
+            updateTotalCount();
+            showToast("تجهیز از لیست واحد حذف شد.");
+        }
+
+        // ---------------------------------------------------------------------
+        // 11. TOAST HELPER
+        // ---------------------------------------------------------------------
+        function showToast(msg, type = "success") {
+            const box = document.getElementById('toastBox');
+            const icon = document.getElementById('toastIcon');
+            document.getElementById('toastMessage').innerText = msg;
+
+            if (type === "error") {
+                icon.className = "fa-solid fa-circle-exclamation text-orange-400 text-base";
+            } else {
+                icon.className = "fa-solid fa-circle-check text-emerald-400 text-base";
+            }
+
+            box.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                box.classList.add('translate-y-20', 'opacity-0');
+            }, 3200);
+        }
+
+        window.onload = bootstrapApp;
+    </script>
+</body>
+</html>
